@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { Storage } from '@google-cloud/storage';
 import {v4 as uuid} from 'uuid';
 
-const storage = new Storage({keyFilename: 'app/key.json'});
+const storage = new Storage({credentials: JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS)});
 const bucketName = 'study-guides';
 const fileName = `${uuid()}.pdf`;
 

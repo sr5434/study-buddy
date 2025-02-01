@@ -59,7 +59,7 @@ export default function Home() {
       <main className="flex flex-col gap-8 row-start-2 items-center">
         <h1 className="font-bold text-3xl">Study Buddy</h1>
         {lastTopic ? <a href={`/dashboard/${lastSessionId}`} className="underline-offset-4 underline text-blue-500 visited:text-blue-500">Continue studying {lastTopic}?</a> : null}
-        <form  onSubmit={submitHandler}>
+        <form onSubmit={submitHandler} className="flex flex-col gap-4">
           <label>Class</label>
           <br/>
           <input type="text" placeholder="Honors Bio" value={course} onChange={handleCourseInput} className="text-slate-900"/>

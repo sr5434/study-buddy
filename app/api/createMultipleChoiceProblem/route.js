@@ -12,13 +12,13 @@ export async function POST(req) {
     let prompt;
 
     if (!reqJSON.studyGuide) {
-        prompt = `Write a multiple practice problem for the following topic: ${reqJSON.topic}. The class is: ${reqJSON.course}. `
+        prompt = `Write a multiple practice problem for the following topic: ${reqJSON.topic}. The class is: ${reqJSON.course}. The student has solved the following problems: ${reqJSON.problems}.`
     }
     else {
         const text = await extractTextFromPDF(reqJSON.studyGuide);
-        prompt = `Write a multiple practice practice problem for the following topic: ${reqJSON.topic}. The class is: ${reqJSON.course}. Here is the study guide the students were given: ${text}.  It should not be directly copied from the study guide.`
+        prompt = `Write a multiple practice practice problem for the following topic: ${reqJSON.topic}. The class is: ${reqJSON.course}. Here is the study guide the students were given: ${text}.  It should not be directly copied from the study guide. The student has solved the following problems: ${reqJSON.problems}.`
     }
-    
+    console.log(prompt)
     const completion = await openai.chat.completions.create({
         model: "gpt-4o",
         messages: [

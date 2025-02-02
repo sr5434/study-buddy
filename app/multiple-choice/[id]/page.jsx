@@ -7,7 +7,7 @@ export default function MultipleChoice({ params }) {
     const [topic, setTopic] = useState("");
     const [course, setCourse] = useState("");
     const [studyGuideURL, setStudyGuideURL] = useState("");
-    const [problem, setProblem] = useState("");
+    const [problems, setProblems] = useState([""]);
     const [options, setOptions] = useState({});// The possible answers for the question.
     const [solution, setSolution] = useState("");// The correct answer
     const [answer, setAnswer] = useState("");// The user's answer
@@ -34,24 +34,25 @@ export default function MultipleChoice({ params }) {
 
     useEffect(() => {
         setExplanation("");
-        setProblem("");
         setAnswer("");
         setShowAnswer(false);
         setOptions({});
-        if (!topic || !course || !studyGuideURL) return;
+        setLoading(true);
+        if (!topic || !course) return;
         fetch("/api/createMultipleChoiceProblem", {
             "method": "POST",
             "headers": {
                 "content-type": "application/json",
             },
-            "body": JSON.stringify({ topic: topic, course: course, studyGuide: studyGuideURL }),
+            "body": JSON.stringify({ topic: topic, course: course, studyGuide: studyGuideURL, problems: problems}),
         })
             .then((response) => response.json())
             .then((data) => {
-                setProblem(data.question);
+                setProblems([...problems, data.question]);
                 setSolution(data.correct_answer);
                 setOptions(data.options);
                 setExplanation(data.explanation);
+                setLoading(false);
             });
     }, [topic, course, studyGuideURL, counter]);
 
@@ -69,13 +70,13 @@ export default function MultipleChoice({ params }) {
                 </a>
                 </div>
                 <div className="flex flex-row gap-6 mr-4">
-                <a href="/open-ended">Open Ended Choice</a>
+                <a href={"/open-ended/"+id}>Open Ended Choice</a>
                 </div>
             </nav>
             <div className="flex flex-col gap-6 row-start-2 items-center">
-                <h1 className="font-bold text-3xl">Open Ended Practice</h1>
-                <h2 className="font-bold text-xl">Problem</h2>
-                {problem ? <p className="w-3/4 ml-4">{problem}</p> : <Loading/>}
+                <h1 className="font-bold text-3xl">Multiple Choice Practice</h1>
+                {!loading ? <h2 className="font-bold text-xl">Problem</h2> : null}
+                {!loading ? <p className="w-3/4 ml-4">{problems.at(-1)}</p> : <Loading/>}
                 { showAnswer ? 
                 <div className="flex flex-col gap-6 items-center">
                     <p className="font-bold">Your answer: {answer+") "+options[answer]}</p>
@@ -84,7 +85,7 @@ export default function MultipleChoice({ params }) {
                     <button type="button" onClick={() => setCounter(counter+1)} className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Next Problem?</button>
                 </div> :
                 <form onSubmit={()=> setShowAnswer(true)}>
-                    {problem ? <label>Response:</label> : null}
+                    {!loading ? <label>Response:</label> : null}
                     <br/>
                     {Object.keys(options).length > 0 ? Object.entries(options).map(([key, value]) => (
                         <div key={key}>
@@ -93,11 +94,11 @@ export default function MultipleChoice({ params }) {
                         </div>
                     )) : null}
                     <br/>
-                    <button 
+                    {!loading ? <button 
                         type="submit"
                         className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-3.5 text-center mt-2">
                         Grade Answer
-                    </button>
+                    </button> : null}
                 </form>
                 }
             </div>

@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@google-cloud/storage": "^7.15.0",
+    "@vercel/analytics": "^1.4.1",
     "firebase": "^11.2.0",
     "js-cookie": "^3.0.5",
     "next": "15.1.6",

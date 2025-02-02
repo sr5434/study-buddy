@@ -16,7 +16,7 @@ export async function POST(req) {
     }
     else {
         const text = await extractTextFromPDF(reqJSON.studyGuide);
-        prompt = `Write a multiple practice practice problem for the following topic: ${reqJSON.topic}. The class is: ${reqJSON.course}. Here is the study guide the students were given: ${text}. `
+        prompt = `Write a multiple practice practice problem for the following topic: ${reqJSON.topic}. The class is: ${reqJSON.course}. Here is the study guide the students were given: ${text}.  It should not be directly copied from the study guide.`
     }
     
     const completion = await openai.chat.completions.create({
@@ -87,7 +87,8 @@ export async function POST(req) {
                 },
                 "strict": true
               }
-        }
+        },
+        temperature: 0.8
     });
     return NextResponse.json(JSON.parse(completion.choices[0].message.content));
 }

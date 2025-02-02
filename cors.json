@@ -4,5 +4,12 @@
       "method": ["PUT", "GET", "POST", "OPTIONS"],
       "responseHeader": ["Content-Type"],
       "maxAgeSeconds": 3600
-    }
+    },
+    
+    {
+      "origin": ["https://study-buddy-gules.vercel.app"],
+      "method": ["PUT", "GET", "POST", "OPTIONS"],
+      "responseHeader": ["Content-Type"],
+      "maxAgeSeconds": 3600
+    },
 ]

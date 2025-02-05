@@ -9,7 +9,7 @@ export async function POST(req) {
     const completion = await openai.chat.completions.create({
         model: "gpt-4o",
         messages: [
-            { role: "system", content: `You are a tutor who grades student responses to practice problems. Users are in this class: ${reqJSON.course}` },
+            { role: "system", content: `You are a tutor who grades student responses to practice problems. Users are in this class: ${reqJSON.course}. They are being assigned problems of the following difficulty:  ${reqJSON.difficulty}.` },
             {
                 role: "user",
                 content: `A student was presented with the following problem: ${reqJSON.problem} This is their response: ${reqJSON.answer}.`,

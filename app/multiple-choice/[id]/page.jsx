@@ -1,6 +1,7 @@
 "use client";
 import { use, useState, useEffect } from "react";
 import { Loading } from "@/app/components/loading";
+import Cookies from "js-cookie";
 
 export default function MultipleChoice({ params }) {
     const { id } = use(params);
@@ -15,7 +16,7 @@ export default function MultipleChoice({ params }) {
     const [counter, setCounter] = useState(0);// Used to force new problem generation
     const [loading, setLoading] = useState(false);
     const [showAnswer, setShowAnswer] = useState(false);
-
+    const difficulty = Cookies.get("difficulty");
     useEffect(() => {
         fetch("/api/getSessionDetails", {
             "method": "POST",
@@ -44,7 +45,7 @@ export default function MultipleChoice({ params }) {
             "headers": {
                 "content-type": "application/json",
             },
-            "body": JSON.stringify({ topic: topic, course: course, studyGuide: studyGuideURL, problems: problems}),
+            "body": JSON.stringify({ topic: topic, course: course, studyGuide: studyGuideURL, problems: problems, difficulty: difficulty}),
         })
             .then((response) => response.json())
             .then((data) => {

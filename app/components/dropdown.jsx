@@ -30,10 +30,23 @@ export default function Dropdown({ setDifficulty, difficulty }) {
             <Menu.Item>
               {({ active }) => (
                 <button
+                  onClick={async (e) => {e.preventDefault();await setDifficulty("Very Easy")}}
+                  className={classNames(
+                    difficulty === "Very Easy" ? 'bg-gray-300 dark:bg-gray-600' : active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                    'block px-4 py-2 text-sm w-56 rounded-t-md'
+                  )}
+                >
+                  Very Easy
+                </button>
+              )}
+            </Menu.Item>
+            <Menu.Item>
+              {({ active }) => (
+                <button
                   onClick={async (e) => {e.preventDefault();await setDifficulty("Easy")}}
                   className={classNames(
                     difficulty === "Easy" ? 'bg-gray-300 dark:bg-gray-600' : active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                    'block px-4 py-2 text-sm w-56 rounded-t-md'
+                    'block px-4 py-2 text-sm w-56'
                   )}
                 >
                   Easy
@@ -59,10 +72,23 @@ export default function Dropdown({ setDifficulty, difficulty }) {
                   onClick={async (e) => {e.preventDefault();await setDifficulty("Hard")}}
                   className={classNames(
                     difficulty === "Hard" ? 'bg-gray-300 dark:bg-gray-600' : active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                    'block px-4 py-2 text-sm w-56 rounded-b-md'
+                    'block px-4 py-2 text-sm w-56'
                   )}
                 >
                   Hard
+                </button>
+              )}
+            </Menu.Item>
+            <Menu.Item>
+              {({ active }) => (
+                <button
+                  onClick={async (e) => {e.preventDefault();await setDifficulty("Very Hard")}}
+                  className={classNames(
+                    difficulty === "Very Hard" ? 'bg-gray-300 dark:bg-gray-600' : active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                    'block px-4 py-2 text-sm w-56 rounded-b-md'
+                  )}
+                >
+                  Very Hard
                 </button>
               )}
             </Menu.Item>

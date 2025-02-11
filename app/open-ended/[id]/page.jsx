@@ -102,7 +102,13 @@ export default function OpenEnded({ params }) {
             <form onSubmit={submitHandler}>
             <label>Response:</label>
             <br/>
-            <textarea value={answer} onChange={handleAnswerInput} className="text-slate-900 w-full h-32"/>
+            <textarea
+              value={answer}
+              onChange={handleAnswerInput}
+              name="response"
+              className="border border-gray-300 p-2 text-slate-900 w-full"
+              rows="5"
+            />
             <br/>
             <div className="flex flex-row justify-end gap-3">
               {loading ? <Loading/> : null}

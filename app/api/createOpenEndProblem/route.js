@@ -18,7 +18,7 @@ export async function POST(req) {
         prompt = `Write a short answer practice problem for the following topic: ${reqJSON.topic}. The class is: ${reqJSON.course}. Here is the study guide the students were given: ${text}.  It should not be directly copied from the study guide. The student has solved the following problems: ${reqJSON.problems}. They requested a difficulty of ${reqJSON.difficulty}.`
     }
     const completion = await openai.chat.completions.create({
-        model: "gpt-4o",
+        model: "gpt-4o-mini",
         messages: [
             { role: "system", content: "You are a tutor who generates practice problems for the user based on the topic they are studying and their class. Do not add a title, just write the problem." },
             {

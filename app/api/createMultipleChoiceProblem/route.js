@@ -20,7 +20,7 @@ export async function POST(req) {
     }
     console.log(prompt)
     const completion = await openai.chat.completions.create({
-        model: "gpt-4o",
+        model: "gpt-4o-mini",
         messages: [
             { role: "system", content: "You are a tutor who generates practice problems for the user based on the topic they are studying and their class." },
             {

@@ -10,12 +10,14 @@ export default function MultipleChoice({ params }) {
     const [studyGuideURL, setStudyGuideURL] = useState("");
     const [problems, setProblems] = useState([""]);
     const [options, setOptions] = useState({});// The possible answers for the question.
-    const [solution, setSolution] = useState("");// The correct answer
+    const [solutions, setSolutions] = useState([""]);// The correct answer
     const [answer, setAnswer] = useState("");// The user's answer
+    const [answers, setAnswers] = useState([""]);// The user's previous answers
     const [explanation, setExplanation] = useState("");
     const [counter, setCounter] = useState(0);// Used to force new problem generation
     const [loading, setLoading] = useState(false);
     const [showAnswer, setShowAnswer] = useState(false);
+
     const difficulty = Cookies.get("difficulty");
     useEffect(() => {
         fetch("/api/getSessionDetails", {
@@ -35,6 +37,7 @@ export default function MultipleChoice({ params }) {
 
     useEffect(() => {
         setExplanation("");
+        setAnswers([...answers, answer+") "+options[answer]]);
         setAnswer("");
         setShowAnswer(false);
         setOptions({});
@@ -45,12 +48,12 @@ export default function MultipleChoice({ params }) {
             "headers": {
                 "content-type": "application/json",
             },
-            "body": JSON.stringify({ topic: topic, course: course, studyGuide: studyGuideURL, problems: problems, difficulty: difficulty}),
+            "body": JSON.stringify({ topic: topic, course: course, studyGuide: studyGuideURL, problems: problems, answers: answers, solutions: solutions, difficulty: difficulty}),
         })
             .then((response) => response.json())
             .then((data) => {
                 setProblems([...problems, data.question]);
-                setSolution(data.correct_answer);
+                setSolutions([...solutions, data.correct_answer+") "+data.options[data.correct_answer]]);
                 setOptions(data.options);
                 setExplanation(data.explanation);
                 setLoading(false);
@@ -81,7 +84,7 @@ export default function MultipleChoice({ params }) {
                 { showAnswer ? 
                 <div className="flex flex-col gap-6 items-center">
                     <p className="font-bold">Your answer: {answer+") "+options[answer]}</p>
-                    {answer !== solution ? <p className="font-bold">Correct answer: {solution+") "+options[solution]}</p> : <p>You were correct!</p>}
+                    {answer !== solutions.at(-1) ? <p className="font-bold">Correct answer: {solutions.at(-1)+") "+options[solutions.at(-1)]}</p> : <p>You were correct!</p>}
                     <p>Explanation: {explanation}</p>
                     <button type="button" onClick={() => setCounter(counter+1)} className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Next Problem?</button>
                 </div> :

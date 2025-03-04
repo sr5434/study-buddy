@@ -1,15 +1,22 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
+import { extractTextFromPDF } from "../../parsePDF";
 
 const openai = new OpenAI();
 
 export async function POST(req) {
     const reqJSON = await req.json();
-
+    let systemPrompt;
+    if (!reqJSON.studyGuide) {
+      systemPrompt = `You are a tutor who grades student responses to practice problems. Users are in this class: ${reqJSON.course}. They are being assigned problems of the following difficulty:  ${reqJSON.difficulty}.`
+    } else {
+      const text = await extractTextFromPDF(reqJSON.studyGuide);
+      systemPrompt = `You are a tutor who grades student responses to practice problems. Users are in this class: ${reqJSON.course}. They are being assigned problems of the following difficulty:  ${reqJSON.difficulty}. Here is the study guide the students were given: ${text}.`
+    }
     const completion = await openai.chat.completions.create({
         model: "gpt-4o",
         messages: [
-            { role: "system", content: `You are a tutor who grades student responses to practice problems. Users are in this class: ${reqJSON.course}. They are being assigned problems of the following difficulty:  ${reqJSON.difficulty}.` },
+            { role: "system", content: systemPrompt },
             {
                 role: "user",
                 content: `A student was presented with the following problem: ${reqJSON.problem} This is their response: ${reqJSON.answer}.`,

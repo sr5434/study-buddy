@@ -10,8 +10,9 @@ export default function OpenEnded({ params }) {
     const [course, setCourse] = useState("");
     const [studyGuideURL, setStudyGuideURL] = useState("");
     const [problems, setProblems] = useState([""]);
+    const [answers, setAnswers] = useState([""]);
+    const [grades, setGrades] = useState([""]);
     const [answer, setAnswer] = useState("");
-    const [grade, setGrade] = useState("");
     const [explanation, setExplanation] = useState("");
     const [counter, setCounter] = useState(0);// Used to force new problem generation
     const [loading, setLoading] = useState(false);
@@ -35,14 +36,13 @@ export default function OpenEnded({ params }) {
         }, []);
     useEffect(() => {
         setExplanation("");
-        setGrade("");
         setGenerating(true);
         fetch("/api/createOpenEndProblem", {
             "method": "POST",
             "headers": {
                 "content-type": "application/json",
             },
-            "body": JSON.stringify({ topic: topic, course: course, studyGuide: studyGuideURL, problems: problems, difficulty: difficulty}),
+            "body": JSON.stringify({ topic: topic, course: course, studyGuide: studyGuideURL, problems: problems, grades: grades, answers: answers, difficulty: difficulty}),
         })
             .then((response) => response.json())
             .then((data) => {
@@ -66,13 +66,14 @@ export default function OpenEnded({ params }) {
         "headers": {
             "content-type": "application/json",
         },
-        "body": JSON.stringify({ problem: problems.at(-1), answer: answer, course: course, difficulty: difficulty}),
+        "body": JSON.stringify({ problem: problems.at(-1), answer: answer, course: course, difficulty: difficulty, studyGuide: studyGuideURL }),
     })
         .then((response) => response.json())
         .then((data) => {
-            setGrade(data.grade);
+            setGrades([...grades, data.grade]);
             setExplanation(data.explanation);
             setLoading(false);
+            setAnswers([...answers, answer]);
             setAnswer("");
         });
     }
@@ -95,7 +96,7 @@ export default function OpenEnded({ params }) {
           {!generating ? <p className="w-3/4 ml-4">{problems.at(-1)}</p> : <Loading/>}
           { explanation ? 
             <div>
-            <p className="font-bold">Your grade: {grade}</p>
+            <p className="font-bold">Your grade: {grades.at(-1)}</p>
             <p>Feedback: {explanation}</p>
             <button type="button" onClick={() => setCounter(counter+1)} className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Next Problem?</button>
             </div> :
